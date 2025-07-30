@@ -1,0 +1,4 @@
+chromedriver-autoinstaller==0.6.4
+requests==2.32.3
+pillow==11.3.0
+selenium==4.5.0
