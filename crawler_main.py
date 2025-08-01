@@ -25,9 +25,6 @@ def convert_images_to_jpg(src_dir, dst_dir):
             except Exception as e:
                 print(f"Failed to convert {file_name}: {e}")
 
-MAX_NUMBER = 100
-NUM_THREADS = 100
-TIMEOUT = 20
 
 def crawl_from_baidu(named_entities, max_number=100, num_threads=100, timeout=20):
     for named_entity in named_entities:
@@ -36,8 +33,11 @@ def crawl_from_baidu(named_entities, max_number=100, num_threads=100, timeout=20
              "--timeout", str(timeout),
              "--file_prefix", "baidu_img",
              "--output",
-             f"./dataset/raw/{named_entity}/", named_entity]
+             f"./dataset/raw/{named_entity}_baidu/", named_entity]
         )
+    # 清洗图片，转换格式并重命名
+    for named_entity in named_entities:
+        convert_images_to_jpg(f"./dataset/raw/{named_entity}_baidu/", f"./dataset/clean/{named_entity}_baidu/")
 
 def crawl_from_google(named_entities, max_number=100, num_threads=100, timeout=20):
     for named_entity in named_entities:
@@ -46,8 +46,11 @@ def crawl_from_google(named_entities, max_number=100, num_threads=100, timeout=2
              "--timeout", str(timeout),
              "--file_prefix", "google_img",
              "--output",
-             f"./dataset/raw/{named_entity}/", named_entity]
+             f"./dataset/raw/{named_entity}_google/", named_entity]
         )
+    # 清洗图片，转换格式并重命名
+    for named_entity in named_entities:
+        convert_images_to_jpg(f"./dataset/raw/{named_entity}_google/", f"./dataset/clean/{named_entity}_google/")
 
 def crawl_from_bing(named_entities, max_number=100, num_threads=100, timeout=20):
     for named_entity in named_entities:
@@ -56,17 +59,24 @@ def crawl_from_bing(named_entities, max_number=100, num_threads=100, timeout=20)
              "--timeout", str(timeout),
              "--file_prefix", "bing_img",
              "--output",
-             f"./dataset/raw/{named_entity}/", named_entity]
+             f"./dataset/raw/{named_entity}_bing/", named_entity]
         )
+    # 清洗图片，转换格式并重命名
+    for named_entity in named_entities:
+        convert_images_to_jpg(f"./dataset/raw/{named_entity}_bing/", f"./dataset/clean/{named_entity}_bing/")
 
 
 if __name__ == '__main__':
     # named_entities = list(mapping_detection_annotations.keys())
     named_entities = ["建筑"]
-    # crawl_from_baidu(named_entities)
-    # crawl_from_google(named_entities)
-    crawl_from_bing(named_entities)
+    """
+    Uncomment the following lines to enable crawling from different search engines.
+    You can choose to crawl from Baidu, Google, or Bing.
+    
+    Note: Ensure that the necessary dependencies are installed and configured correctly.
+    You may need to adjust the max_number, num_threads, and timeout parameters as needed.
+    """
 
-    # 清洗图片，转换格式并重命名
-    for named_entity in named_entities:
-        convert_images_to_jpg(f"./dataset/raw/{named_entity}/", f"./dataset/clean/{named_entity}/")
+    # crawl_from_baidu(named_entities, max_number=100, num_threads=100, timeout=20)
+    # crawl_from_google(named_entities, max_number=100, num_threads=100, timeout=20)
+    crawl_from_bing(named_entities, max_number=100, num_threads=100, timeout=20)
